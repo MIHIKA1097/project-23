@@ -1,38 +1,70 @@
+var helicopterIMG, helicopterSprite, packageSprite,packageIMG;
+var packageBody,ground;
+var side1,side2,side3;
 const Engine = Matter.Engine;
-const World= Matter.World;
+const World = Matter.World;
 const Bodies = Matter.Bodies;
-var engine,world,ground;
-var ball,box1;
-var box2,ground;
-function setup() {
-  createCanvas(400,400);
-  engine = Engine.create();
-  world = engine.world;
-  // var options={
-  //   isStatic: true
-  // }
-  // var ball_options={
-  //   restitution:0.5
-  // }
-  // ground=Bodies.rectangle(200,375,400,20,options);
-  // World.add(world,ground);
-  // console.log(ground.position.x,ground.position.y);
-  // ball=Bodies.circle(200,100,20,ball_options);
-  // World.add(world,ball);
-  box1=new Box(200,300,50,50);
-  box2=new Box(240,100,50,100);
-  ground=new Ground(200,390,400,20)
+const Body = Matter.Body;
+
+function preload()
+{
+	helicopterIMG=loadImage("helicopter.png")
+	packageIMG=loadImage("package.png")
 }
 
-function draw() {
-  background(0);
-  Engine.update(engine);
-//   rectMode(CENTER)
-//   rect(ground.position.x,ground.position.y,400,20); 
-// ellipseMode(CENTER)
-// ellipse(ball.position.x,ball.position.y,40,40); 
-//   drawSprites();
-box1.display();
-box2.display();
-ground.display();
+function setup() {
+	createCanvas(800, 700);
+	rectMode(CENTER);
+	
+
+	packageSprite=createSprite(width/2, 80, 10,10);
+	packageSprite.addImage(packageIMG)
+	packageSprite.scale=0.2
+
+	helicopterSprite=createSprite(width/2, 200, 10,10);
+	helicopterSprite.addImage(helicopterIMG)
+	helicopterSprite.scale=0.6
+
+	groundSprite=createSprite(width/2, height-35, width,10);
+	groundSprite.shapeColor=color(255)
+
+	engine = Engine.create();
+	world = engine.world;
+
+	packageBody = Bodies.circle(width/2 , 200 , 5 , {restitution:0.7, isStatic:true});
+	World.add(world, packageBody);
+	
+
+	//Create a Ground
+	ground = Bodies.rectangle(width/2, 650, width, 10 , {isStatic:true} );
+ 	World.add(world, ground);
+
+
+	Engine.run(engine);
+	side1=new side()
+	side2=new side()
+	side3=new side()
+  
 }
+
+
+function draw() {
+  rectMode(CENTER);
+  background(0);
+  packageSprite.x= packageBody.position.x 
+  packageSprite.y= packageBody.position.y 
+  drawSprites();
+ 
+}
+
+function keyPressed() {
+ if (keyCode === DOWN_ARROW) {
+ Matter.Body.setStatic(packageBody,false)   
+	  } 
+ side1.display(width/2,10,200,20); 
+ side2.display(width/2,10,20,200);
+ side3.display(width/2,10,20,200);
+}
+
+
+
